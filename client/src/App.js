@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import Portal from './components/Portal'
+import NavBar from './components/NavBar'
 import './App.css';
 const ReactDOM = require('react-dom');
 
@@ -10,9 +11,10 @@ class App extends Component {
     return (
       <div className="App">
         
-         
-        <Portal />
-
+         <NavBar />
+         <main className="cd-main-content">
+          <Portal /> 
+        </main>
        
       </div>
     );
