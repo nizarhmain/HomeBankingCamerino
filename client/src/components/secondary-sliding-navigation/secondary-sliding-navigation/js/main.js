@@ -2,7 +2,7 @@ jQuery(document).ready(function($){
 	//move nav element position according to window width
 	moveNavigation();
 	$(window).on('resize', function(){
-		(!window.requestAnimationFrame) ? setTimeout(moveNavigation, 300) : window.requestAnimationFrame(moveNavigation);
+		(!window.requestAnimationFrame) ? setTimeout(moveNavigation, 50) : window.requestAnimationFrame(moveNavigation);
 	});
 
 	//mobile version - open/close navigation

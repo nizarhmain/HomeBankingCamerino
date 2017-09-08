@@ -460,11 +460,15 @@ header::before {
 }
 
 .cd-main-content {
+  
   position: relative;
   z-index: 2;
   min-height: 100vh;
   padding-top: 50px;
-  background-color: #f2f2f2;
+  background: #43cea2;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #185a9d, #43cea2);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #185a9d, #43cea2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
   -webkit-transition: -webkit-transform 0.3s;
   -moz-transition: -moz-transform 0.3s;
   transition: transform 0.3s;
@@ -479,6 +483,14 @@ header::before {
 @media only screen and (min-width: 1024px) {
   .cd-main-content {
     padding-top: 80px;
+    
+    background: #2BC0E4;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2BC0E4, #EAECC6);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2BC0E4, #EAECC6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+  
+    -webkit-clip-path: polygon(0 0, 100% 0%, 100% 84%, 0 51%);
+    clip-path: polygon(0 0, 100% 0%, 100% 84%, 0 51%);
   }
   .cd-main-content.nav-is-visible {
     -webkit-transform: translateX(0);

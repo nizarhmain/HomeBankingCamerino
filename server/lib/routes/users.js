@@ -109,7 +109,7 @@ router.post('/authenticate', function(req, res ){
 
 });
 
-// profile route
+// profile route USER JWT in front of the tokens, otherwise it won't be able to decode it
 router.get('/profile', passport.authenticate('jwt', {session: false}), function(req, res){
     res.json({user: req.user});
 });
