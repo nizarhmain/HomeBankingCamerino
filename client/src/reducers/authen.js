@@ -16,8 +16,16 @@ export default ( state = initialState, action = {}) => {
 				username: action.user.username,
 				email: action.user.email,
 				name: action.user.name,
-				admin: action.user.erAdmin
+				card: action.user.creditCard,
+				balance: action.user.balance,
+				id: action.user._id
 			};
+
+			case 'SET_CURRENT_BALANCE':
+			return {
+				balance: action.user.balance,
+			};
+
 
 		default: return state;
 

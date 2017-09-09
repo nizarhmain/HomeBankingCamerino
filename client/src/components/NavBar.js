@@ -4,12 +4,32 @@ import './secondary-sliding-navigation/secondary-sliding-navigation/css/reset.cs
 
 import './secondary-sliding-navigation/secondary-sliding-navigation/js/main.js'
 
+import PropTypes from 'prop-types'; // react prop types are depecrated
+
+import FlatButton from 'material-ui/FlatButton'; 
 import LoginDialog from './LoginDialog'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
+import { logout } from '../actions/login'
 
 
 
-export default class NavBar extends React.Component {
+export class NavBar extends React.Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  logout(e){
+    e.preventDefault();
+    this.props.logout();
+    this.context.router.history.replace('/');
+  }
+
+
+
+
+
     render() {
         return (
       <div>
@@ -18,11 +38,13 @@ export default class NavBar extends React.Component {
         <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet" type="text/css" />
     {/* Modernizr */}
         <header>
-          <div className="cd-logo"><a href="#0"><img src="https://maxcdn.icons8.com/Share/icon/ios7/Animals//koala1600.png" height="50px"alt="Logo" /></a></div>
+          <div className="cd-logo"><a href="/"><img src="https://maxcdn.icons8.com/Share/icon/ios7/Animals//koala1600.png" height="50px"alt="Logo" /></a></div>
           <nav className="cd-main-nav-wrapper">
             <ul className="cd-main-nav">
-              <li> <a> <LoginDialog  /> </a> </li>
+                {!this.props.authen.isAuthenticated ? <li><a> <LoginDialog /> </a> </li> :  <li><a> <FlatButton className ="loginButton" label="Log Out" onTouchTap = {this.logout.bind(this)}/></a> </li> } 
+                {this.props.authen.isAuthenticated &&  <li><a> {this.props.authen.balance} € </a> </li> } 
               <li><a href="#0">Assistenza</a></li>
+              <li><a href="/profile">Profile</a></li>
               <li>
                 <a href="#0" className="cd-subnav-trigger"><span>Servizi Online</span></a>
                 <ul>
@@ -46,6 +68,20 @@ export default class NavBar extends React.Component {
           
     }
 }
+
+function mapStateToProps(state){
+	return {
+		authen: state.authen
+	};
+}
+
+NavBar.contextTypes = {
+  router: PropTypes.object.isRequired
+};
+
+
+// connecting to redux  
+export default connect(mapStateToProps, {logout} )(NavBar);
 
 
 

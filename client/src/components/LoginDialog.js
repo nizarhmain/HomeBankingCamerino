@@ -80,7 +80,7 @@ export class LoginDialog extends React.Component {
 												setAuthorizationToken(response.data.token);						
 												const decodedToken = jwt.decode(response.data.token);
 												this.props.setCurrentUser(decodedToken._doc);
-											//	this.context.router.history.replace('/home/1');     
+												this.context.router.history.replace('/profile');     
 											}
 										},
 

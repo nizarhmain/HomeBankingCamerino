@@ -1,8 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+
 import NavBar from './components/NavBar'
 import Portal from './components/Portal'
-import './App.css';
+import Profile from './components/Profile'
+import CardManagement from './components/CardManagement'
+
+import requireAuth from './utils/requireAuth'
+
+import './App.css'
 
 export default class AppLayout extends React.Component {
 
@@ -17,8 +23,11 @@ export default class AppLayout extends React.Component {
 										<NavBar />
 		   
                         <main className="cd-main-content">
-
-                       			<Portal />
+							<Switch>
+										<Route exact path="/" component={Portal} />
+										<Route exact path="/profile" component={requireAuth(Profile)} />   
+										<Route exact path="/cardmanagement" component={requireAuth(CardManagement)} />   										  
+		  				 </Switch>
                         
                         </main>
                         

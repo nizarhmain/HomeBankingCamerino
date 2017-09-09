@@ -16,6 +16,8 @@ a {
   text-decoration: none;
 }
 
+
+
 /* -------------------------------- 
 
 Main Components 
@@ -87,7 +89,7 @@ header::before {
 .cd-logo img {
   display: block;
   max-width: 100%;
-  margin-top: 14px;
+  margin-top: 0px;
 }
 @media only screen and (min-width: 1024px) {
   .cd-logo {
@@ -96,7 +98,7 @@ header::before {
     margin-left: 5%;
   }
   .cd-logo img {
-    margin-top: 29px;
+    margin-top: 15px;
   }
 }
 
@@ -470,7 +472,7 @@ header::before {
   z-index: 2;
   min-height: 100vh;
   padding-top: 50px;
-  
+
   background: #43cea2;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #185a9d, #43cea2);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #185a9d, #43cea2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */

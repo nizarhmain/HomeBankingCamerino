@@ -12,6 +12,7 @@ const UserSchema = mongoose.Schema({
     password: {type:String, required: true},
     passwordConfirmation : {type:String, required: true},
     creditCard: {type:String, default:generator.GenCC().toString(), required: true},
+    balance: {type:Number, default: 0, required: true},
     erAdmin: {type: Boolean}
 });
 

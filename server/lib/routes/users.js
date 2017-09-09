@@ -99,7 +99,9 @@ router.post('/authenticate', function(req, res ){
                 res.json({
                     success: true,
                     token: token,
-                    user: { id: user._id, name: user.name, username: user.username, email: user.email},
+                    user: { id: user._id, name: user.name, username: user.username, email: user.email, creditCard: user.creditCard,
+                            balance: user.balance
+                    },
                 })
             } else {
                 return res.json({ errors: {password: 'wrong password '} });
@@ -112,6 +114,34 @@ router.post('/authenticate', function(req, res ){
 // profile route USER JWT in front of the tokens, otherwise it won't be able to decode it
 router.get('/profile', passport.authenticate('jwt', {session: false}), function(req, res){
     res.json({user: req.user});
+});
+
+router.put('/updatebalance', function(req,res){
+    console.log(req.body);
+    var user = req.body;
+    var amount = req.body.amount;
+	if(user == null || user._id == null ){
+		return res.sendStatus(400);
+	} else {
+
+        User.getUserById(user._id, (err, user) => {
+            if(err) {
+                return res.sendStatus(400);
+            }
+            var newBalance = user.balance + amount;
+            User.update({_id: user._id}, { $set : { balance: newBalance}}, function(err,nbRows, raw){
+                if(err){
+                    console.log("couldnt find it ")        
+                        return res.sendStatus(400);
+                    } else {
+                        return res.json({success: true, msg: 'Transaction completed'});
+                    }
+                });
+        })
+
+     
+  }
+
 });
 
 
