@@ -1,7 +1,9 @@
 import React from 'react'
 import './secondary-sliding-navigation/secondary-sliding-navigation/css/style.css'
 import './secondary-sliding-navigation/secondary-sliding-navigation/css/reset.css'
+
 import './secondary-sliding-navigation/secondary-sliding-navigation/js/main.js'
+
 import LoginDialog from './LoginDialog'
 import {connect} from 'react-redux'
 
@@ -16,7 +18,7 @@ export default class NavBar extends React.Component {
         <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet" type="text/css" />
     {/* Modernizr */}
         <header>
-          <div className="cd-logo"><a href="#0"><img src="img/cd-logo.svg" alt="Logo" /></a></div>
+          <div className="cd-logo"><a href="#0"><img src="https://maxcdn.icons8.com/Share/icon/ios7/Animals//koala1600.png" height="50px"alt="Logo" /></a></div>
           <nav className="cd-main-nav-wrapper">
             <ul className="cd-main-nav">
               <li> <a> <LoginDialog  /> </a> </li>

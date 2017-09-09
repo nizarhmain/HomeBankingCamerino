@@ -1,12 +1,9 @@
 body{
   margin: 0px;
   font-family: 'Montserrat';
-
+ 
 }
 
-.ui.container {
-  margin-top: 10%;
-}
 
 .loginButton{
  color: white !important;
@@ -15,6 +12,24 @@ body{
  overflow: hidden !important;
 
 }
+
+.profile {
+  position:  relative;
+  height: 30% !important;
+  width: 50% !important;
+  margin: 20px !important;
+  text-align: center !important;
+}
+
+.portal {
+  margin-top: 60px;
+}
+
+header { 
+  opacity: 0.7;
+}
+
+
 
 
 

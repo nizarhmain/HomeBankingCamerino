@@ -14,11 +14,11 @@ export default class AppLayout extends React.Component {
 	return (
 		<Router>
 			  <div className ="App">
-					<NavBar />
+										<NavBar />
 		   
                         <main className="cd-main-content">
 
-                        <Portal /> 
+                       			<Portal />
                         
                         </main>
                         
