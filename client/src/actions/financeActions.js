@@ -1,11 +1,15 @@
 import axios from 'axios';
 
-export function setCurrentBalance(balance){
+/*  PASSING THAT ACTION TO REDUCERS TO UPDATE THE STORE*/ 
+
+export function getCurrentBalance(balance){
 	return {
-		type: 'SET_CURRENT_BALANCE',
+		type: 'GET_CURRENT_BALANCE',
 		balance
 	};
 }
+
+/* ACTIONS  */
 
 export function changeBalance(transactionData) {
 	return dispatch => {

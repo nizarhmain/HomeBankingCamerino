@@ -4,6 +4,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 const ReactDOM = require('react-dom');
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
+
+import {persistStore, autoRehydrate} from 'redux-persist'
+
 import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from './rootReducer';
 import setAuthorizationToken from './utils/setAuthorizationToken';
@@ -23,10 +26,13 @@ const store = createStore(
   rootReducer,
   compose(
     applyMiddleware(thunk),
+    autoRehydrate(),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
 
+// redux-persist
+persistStore(store)
 
 // keep the jwt token saved in the localstorage 
 if(localStorage.jwtToken) {

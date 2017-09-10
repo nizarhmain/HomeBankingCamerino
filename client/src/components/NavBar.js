@@ -1,4 +1,6 @@
 import React from 'react'
+import axios from 'axios';
+
 import './secondary-sliding-navigation/secondary-sliding-navigation/css/style.css'
 import './secondary-sliding-navigation/secondary-sliding-navigation/css/reset.css'
 
@@ -17,14 +19,29 @@ import { logout } from '../actions/login'
 export class NavBar extends React.Component {
 
   constructor(props){
-    super(props)
+    super(props);
+            this.state = {    
+                    balance: 0
+        };
   }
+
+  componentWillMount() {
+            axios.get("http://localhost:3000/users/profile")
+            .then( (response) => {
+              console.log(response.data.user.balance);
+              this.setState({balance: response.data.user.balance});
+
+            });
+
+        }
+
 
   logout(e){
     e.preventDefault();
     this.props.logout();
     this.context.router.history.replace('/');
   }
+
 
 
 
@@ -42,7 +59,7 @@ export class NavBar extends React.Component {
           <nav className="cd-main-nav-wrapper">
             <ul className="cd-main-nav">
                 {!this.props.authen.isAuthenticated ? <li><a> <LoginDialog /> </a> </li> :  <li><a> <FlatButton className ="loginButton" label="Log Out" onTouchTap = {this.logout.bind(this)}/></a> </li> } 
-                {this.props.authen.isAuthenticated &&  <li><a> {this.props.authen.balance} € </a> </li> } 
+                {this.props.authen.isAuthenticated &&  <li><a> {Math.round(this.state.balance*100)/100} € </a> </li> } 
               <li><a href="#0">Assistenza</a></li>
               <li><a href="/profile">Profile</a></li>
               <li>

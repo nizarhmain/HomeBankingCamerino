@@ -12,20 +12,18 @@ export default ( state = initialState, action = {}) => {
 
 		case 'SET_CURRENT_USER':
 			return {
+	
 				isAuthenticated: !isEmpty(action.user),
 				username: action.user.username,
 				email: action.user.email,
 				name: action.user.name,
 				card: action.user.creditCard,
 				balance: action.user.balance,
-				id: action.user._id
+				id: action.user._id		
+					
 			};
 
-			case 'SET_CURRENT_BALANCE':
-			return {
-				balance: action.user.balance,
-			};
-
+			
 
 		default: return state;
 

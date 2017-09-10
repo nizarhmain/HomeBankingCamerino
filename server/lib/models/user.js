@@ -28,6 +28,11 @@ module.exports.getUserByUsername = function(username, callback){
     User.findOne(query, callback);
 };
 
+module.exports.getUserByCard = function(creditCard, callback){
+    const query = {creditCard: creditCard};
+    User.findOne(query, callback);
+};
+
 module.exports.getUserByEmail = function(email, callback){
     const query = {email:email};
     User.findOne(query, callback);

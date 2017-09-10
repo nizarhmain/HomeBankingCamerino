@@ -4,27 +4,50 @@ import {connect} from 'react-redux';
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
+import { setCurrentBalance } from '../actions/financeActions'
+import { changeBalance } from '../actions/financeActions'
+
+
+import { setCurrentUser } from '../actions/login'
+import { newCurrentBalance } from '../actions/login'
+
 
 export class CardManagement extends React.Component {
 
     constructor(props) {
 		super(props);
 		this.state = {    
-											open:false,
-											username: '',
-											password: '',
-											errors: '',
-											isLoading: false
+                    _id : this.props.authen.id,
+                    amount: 0
 							};
-				// binding to the actual scope that we have 
+        // binding to the actual scope that we have 
+        this.onChange = this.onChange.bind(this);        
 		this.onCarica = this.onCarica.bind(this);
 	}
 
+  onChange(e){
+    this.setState({ [e.target.name] : parseFloat(e.target.value) || 0 });
+  }
+
+
 onCarica(e) {
-    console.log("cc");
     e.preventDefault();
-    
+    this.props.changeBalance(this.state).then(
+      // when login is correct we will redirect
+          (response) =>     {
+                      console.log(response.data);
+
+                      this.props.setCurrentUser(response.data.user);
+                    },
+
+          (err) => {
+                      console.log("shouldnt happen");
+               });   
+  
 }
+
 
 
     render() {
@@ -88,8 +111,9 @@ onCarica(e) {
         
         <div className="cardActions six wide column" >     
     			   
-                    <RaisedButton label="Carica" backgroundColor="#a4c639" labelColor="#ffffff" onTouchTap={this.onCarica} labelPosition="before" fullWidth={true}/>
-				
+        <TextField  hintText="Quantità €" type="number" name="amount" value={this.state.amount} onChange={this.onChange} /><br />
+        <RaisedButton label="Carica" backgroundColor="#a4c639" labelColor="#ffffff" onTouchTap={this.onCarica} labelPosition="before" fullWidth={true}/>
+
           </div>
 
         
@@ -105,10 +129,9 @@ CardManagement.contextTypes = {
   
   function mapStateToProps(state){
       return {
-          authen: state.authen
-      };
+          authen: state.authen      };
   }
   
   
   
-  export default connect(mapStateToProps)(CardManagement);
+  export default connect(mapStateToProps, {changeBalance, setCurrentUser})(CardManagement);

@@ -117,7 +117,6 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), function(
 });
 
 router.put('/updatebalance', function(req,res){
-    console.log(req.body);
     var user = req.body;
     var amount = req.body.amount;
 	if(user == null || user._id == null ){
@@ -134,7 +133,9 @@ router.put('/updatebalance', function(req,res){
                     console.log("couldnt find it ")        
                         return res.sendStatus(400);
                     } else {
-                        return res.json({success: true, msg: 'Transaction completed'});
+                        return res.json({success: true, msg: 'Transaction completed', user: { _id: user._id, name: user.name, username: user.username, email: user.email, creditCard: user.creditCard,
+                            balance: newBalance }
+                        });
                     }
                 });
         })
@@ -143,6 +144,72 @@ router.put('/updatebalance', function(req,res){
   }
 
 });
+
+
+router.put('/transfer', function(req,res){
+    // sender and receiver are card numbers
+    var sender = req.body.sender;
+    var receiver = req.body.receiver;
+    var amount = req.body.amount;
+
+    User.getUserByCard(sender, (err,sender) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+            if(!sender) {
+                return res.json({ errors: {username: 'user not found'} });
+            }
+            
+            // check if the sender is in the range of 0 or more and that the transaction is less than his actual balance
+              // we got a valid sender at  this point  
+            if(sender.balance >= 0 && sender.balance >= amount  ){
+                User.getUserByCard(receiver, (err,receiver) => {
+                    if(err) {
+                        return res.sendStatus(400);
+                    }
+                        if(!receiver) {
+                            return res.json({ errors: {username: 'user not found'} });
+                        }
+    
+                        // we found both the sender and the receiver info are here
+                        var newSenderBalance = sender.balance - parseFloat(amount) ;
+                        var newReceiverBalance = parseFloat(receiver.balance) + parseFloat(amount)  ;         
+                        User.update({_id: sender._id}, { $set : { balance: newSenderBalance}}, function(err,nbRows, raw){
+                            if(err){
+                                console.log("go die")        
+                                    return res.sendStatus(400);
+                                } else {
+                                    console.log("the sender lost his money");
+                                    
+                                }
+                            
+                            });
+    
+                            User.update({_id: receiver._id}, {$set: { balance: newReceiverBalance}}, function (err, nbRows, raw) {
+                                if(err){
+                                    console.log("go die twice")
+                                    return res.sendStatus(400);
+                                } else {
+                                    console.log ("transaction was successfull");
+                                }
+                            })
+    
+                    return res.json({ transaction : { newBalanceSender: newSenderBalance }});
+            
+                }) 
+
+
+            } else {
+                return res.json({msg : "not enough funds to do this transaction :( "});
+            }
+          
+    });
+
+    
+
+})
+
+
 
 
 
