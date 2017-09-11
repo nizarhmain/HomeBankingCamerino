@@ -38,8 +38,7 @@ onCarica(e) {
       // when login is correct we will redirect
           (response) =>     {
                       console.log(response.data);
-
-                      this.props.setCurrentUser(response.data.user);
+                      this.context.router.history.replace('/profile');
                     },
 
           (err) => {

@@ -26,7 +26,7 @@ class Profile extends React.Component {
                       month: date.getMonth()+1,
                       cardNumber: '',
                       amount: 0,
-                      balance: 0
+                      balance: ''
 							};
               this.onCardClick = this.onCardClick.bind(this);
               this.cc_format = this.cc_format.bind(this);

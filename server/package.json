@@ -9,7 +9,7 @@
     "serve": "node dist/api.js",
     "test": "mocha --compilers js:babel-register"
   },
-    "dependencies": {
+  "dependencies": {
     "bcryptjs": "2.4.3",
     "bluebird": "^3.5.0",
     "body-parser": "1.17.1",
@@ -22,6 +22,7 @@
     "nodemon": "1.11.0",
     "passport": "0.3.2",
     "passport-jwt": "2.2.1",
+    "socket.io": "^2.0.3",
     "validator": "^7.0.0"
   },
   "author": "Nizar Hmain",

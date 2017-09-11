@@ -18,7 +18,6 @@ export default ( state = initialState, action = {}) => {
 				email: action.user.email,
 				name: action.user.name,
 				card: action.user.creditCard,
-				balance: action.user.balance,
 				id: action.user._id		
 					
 			};

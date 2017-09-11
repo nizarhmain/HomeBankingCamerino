@@ -16,6 +16,7 @@ import AppLayout from './AppLayout';
 
 
 
+
 // injection of tap even for material ui, otherwise it won't work
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
@@ -26,13 +27,12 @@ const store = createStore(
   rootReducer,
   compose(
     applyMiddleware(thunk),
-    autoRehydrate(),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
 
 // redux-persist
-persistStore(store)
+//persistStore(store)
 
 // keep the jwt token saved in the localstorage 
 if(localStorage.jwtToken) {
@@ -45,6 +45,8 @@ if(localStorage.jwtToken) {
 
 
 class App extends Component {
+           
+
   render() {
     const a = 5
     return (
