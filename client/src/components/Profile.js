@@ -49,7 +49,7 @@ class Profile extends React.Component {
     socket.on('infoRes', info => cb(null, info));
     socket.emit('infoReq', {
       id: this.props.authen.id,
-      username: this.props.authen.username
+      creditCard: this.props.authen.card
     });
   }
 
@@ -64,8 +64,9 @@ class Profile extends React.Component {
           // we let know about the transfer to the receiver 
           // if the client received the message emit
           // we 'll make him do another axios request to update his balance 
+
           socket.emit('send message', {
-            name: "tsu4",
+            name: this.state.cardNumber,   // to who are you sending the moneyz
             msg: "You just received some money, congrats !"
           });
 
@@ -90,8 +91,8 @@ class Profile extends React.Component {
     axios.get("http://localhost:3000/users/profile")
              .then( (response) => {
                console.log(response.data.user.balance);
+               console.log(response.data.transactions);
                this.setState({balance: response.data.user.balance});
-
              });
     
              // we get the personal info for the socket, without we wouldn't identiy the client

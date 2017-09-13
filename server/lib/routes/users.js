@@ -1,5 +1,6 @@
 import express from 'express'
 import User from '../models/user'
+import Transaction from '../models/transaction'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import config from '../config/database'
@@ -113,35 +114,18 @@ router.post('/authenticate', function(req, res ){
 
 // profile route USER JWT in front of the tokens, otherwise it won't be able to decode it
 router.get('/profile', passport.authenticate('jwt', {session: false}), function(req, res){
-    res.json({user: req.user});
-});
 
-router.put('/updatebalance', function(req,res){
-    var user = req.body;
-    var amount = req.body.amount;
-	if(user == null || user._id == null ){
-		return res.sendStatus(400);
-	} else {
+    var userCard = req.user.creditCard;
 
-        User.getUserById(user._id, (err, user) => {
-            if(err) {
-                return res.sendStatus(400);
-            }
-            var newBalance = user.balance + amount;
-            User.update({_id: user._id}, { $set : { balance: newBalance}}, function(err,nbRows, raw){
-                if(err){
-                    console.log("couldnt find it ")        
-                        return res.sendStatus(400);
-                    } else {
-                        return res.json({success: true, msg: 'Transaction completed', user: { _id: user._id, name: user.name, username: user.username, email: user.email, creditCard: user.creditCard,
-                            balance: newBalance }
-                        });
-                    }
-                });
-        })
-
-     
-  }
+    Transaction.getTransactionsOfCard(userCard, (err, transactions) => {
+        if(err) {
+            console.log("couldn't fetch the transactions ");
+        } else {
+    
+        return res.json({user: req.user, transactions: transactions});        
+       
+        };
+    });
 
 });
 
@@ -171,7 +155,24 @@ router.put('/transfer', function(req,res){
                             return res.json({ errors: {username: 'user not found'} });
                         }
     
+                            
                         // we found both the sender and the receiver info are here
+                        // we have sender + receiver + amount here
+                        var newTransaction = new Transaction({
+                            senderCard: sender.creditCard,         // sender and receiver are cards here
+                            receiverCard: receiver.creditCard,
+                            transactionBalance: amount                
+                        });
+
+                        Transaction.AddTransaction(newTransaction, function(err, transaction){
+                            if(err){
+                                console.log("transaction was not registered, something went buggy");
+                            } else {
+                                console.log("transaction was successfully registered on the database");
+                            }
+                        });
+                            
+
                         var newSenderBalance = sender.balance - parseFloat(amount) ;
                         var newReceiverBalance = parseFloat(receiver.balance) + parseFloat(amount)  ;         
                         User.update({_id: sender._id}, { $set : { balance: newSenderBalance}}, function(err,nbRows, raw){

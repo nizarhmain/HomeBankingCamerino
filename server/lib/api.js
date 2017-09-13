@@ -71,11 +71,11 @@ var utilisateurs = {};
 serverSocket.of('/chat_infra').on('connection', (client) => {
     
          client.on('infoReq', (data) => {
-             console.log(data.username + " connected with ", client.id);
+             console.log(data.creditCard + " connected with ", client.id);
 
-             if( data.username in utilisateurs) {
+             if( data.creditCard in utilisateurs) {
              } else {
-                 client.nickname = data.username;
+                 client.nickname = data.creditCard;
                  utilisateurs[client.nickname] = client;
                 // console.log(client.nickname);
                   //   console.log(utilisateurs[data.username].id);
