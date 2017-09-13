@@ -211,7 +211,34 @@ router.put('/transfer', function(req,res){
 })
 
 
+router.put('/updatebalance', function(req,res){
+    var user = req.body;
+    var amount = req.body.amount;
+	if(user == null || user._id == null ){
+		return res.sendStatus(400);
+	} else {
 
+        User.getUserById(user._id, (err, user) => {
+            if(err) {
+                return res.sendStatus(400);
+            }
+            var newBalance = user.balance + amount;
+            User.update({_id: user._id}, { $set : { balance: newBalance}}, function(err,nbRows, raw){
+                if(err){
+                    console.log("couldnt find it ")        
+                        return res.sendStatus(400);
+                    } else {
+                        return res.json({success: true, msg: 'Transaction completed', user: { _id: user._id, name: user.name, username: user.username, email: user.email, creditCard: user.creditCard,
+                            balance: newBalance }
+                        });
+                    }
+                });
+        })
+
+     
+  }
+
+});
 
 
 

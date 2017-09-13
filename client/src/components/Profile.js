@@ -170,7 +170,7 @@ onChange(e){
         <div className="five wide column" >
         <Paper  zDepth={4} children={
     			    <List >
-					      <ListItem primaryText="Le Mie Carte"  disabled={true}/>  
+					      <ListItem primaryText="Lista dei Movimenti"  disabled={true}/>  
                 <div className="ui grid stackable container">
                   <div className="six wide column">
                         <img src="http://paymenticons.com/img/mastercard.png" />
