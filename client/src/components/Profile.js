@@ -9,12 +9,14 @@ import axios from 'axios';
 
 
 
+import openSocket from 'socket.io-client'
+
+const socket = openSocket('http://localhost:5000/chat_infra');
+
+
 class Profile extends React.Component {
 
 // changed the promise auth header is sent automatically so when the shit is completed i'll just have to extract the user from it 
-
-
-
 
 
 
@@ -31,19 +33,91 @@ class Profile extends React.Component {
               this.onCardClick = this.onCardClick.bind(this);
               this.cc_format = this.cc_format.bind(this);
               this.onChange = this.onChange.bind(this);        
-              
+              this.onTransfer = this.onTransfer.bind(this);                      
   }
 
-  componentWillMount() {
+
+    // these are sockets for real time data transfer
+  privateMessage(cb){
+    socket.on('whisper', data => cb(null, data));
+  }
+
+  // socket part is here
+
+  personalInfo(cb) {
+    // we listen for the info to come, if we don't receive or get an err, we got null, else we got an info and we use that info
+    socket.on('infoRes', info => cb(null, info));
+    socket.emit('infoReq', {
+      id: this.props.authen.id,
+      username: this.props.authen.username
+    });
+  }
+
+  onTransfer(){
+    axios.put("http://localhost:3000/users/transfer", {
+      sender: this.props.authen.card,
+      receiver: this.state.cardNumber,
+      amount: this.state.amount
+    }).then( (response) => {
+          console.log("you Successfully transfered money !");
+          // if we have a successfully entry in the db, and the successfull manage to happen 
+          // we let know about the transfer to the receiver 
+          // if the client received the message emit
+          // we 'll make him do another axios request to update his balance 
+          socket.emit('send message', {
+            name: "tsu4",
+            msg: "You just received some money, congrats !"
+          });
+
+          // update the sender's balance too here 
+          // second axios request to update the balance after a notification from another user 
+          axios.get("http://localhost:3000/users/profile")
+          .then( (response) => {
+            console.log(response.data.user.balance);
+            this.setState({balance: response.data.user.balance});
+          });
+
+    })
+  
+
+  
+  }
+
+  // we load the sockets here so we establish the socket layer in the api, live transaction and data is established at 
+  // this very crucial point
+  componentDidMount() {
+    
     axios.get("http://localhost:3000/users/profile")
              .then( (response) => {
                console.log(response.data.user.balance);
                this.setState({balance: response.data.user.balance});
 
              });
+    
+             // we get the personal info for the socket, without we wouldn't identiy the client
+             // that sends the requested socket
+             this.personalInfo();
+
+             this.privateMessage((err, data) => {
+              console.log(data);
+              // second axios request to update the balance after a notification from another user 
+                axios.get("http://localhost:3000/users/profile")
+                .then( (response) => {
+                  console.log(response.data.user.balance);
+                  this.setState({balance: response.data.user.balance});
+                });
+            })
+
+
+            
         }
 
+
+
   
+      
+        
+
   onCardClick(e) {
     e.preventDefault();
     this.context.router.history.replace('/cardmanagement');
@@ -123,7 +197,7 @@ onChange(e){
                 <ListItem primaryText="Bonifico"  disabled={true}/>  
                 <TextField  hintText="Numero Di Carta"  name="cardNumber" value={this.state.cardNumber} onChange={this.onChange} /><br />
                 <TextField  hintText="Quantità €" type="number" name="amount" value={this.state.amount} onChange={this.onChange} /><br />
-                <RaisedButton label="Transfer !" primary={true} />
+                <RaisedButton label="Transfer !" primary={true} onTouchTap = { this.onTransfer } />
             </List> 
             
             } 

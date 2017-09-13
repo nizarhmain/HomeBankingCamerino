@@ -69,40 +69,38 @@ var utilisateurs = {};
 
 
 serverSocket.of('/chat_infra').on('connection', (client) => {
-       
-            client.on('infoReq', (data) => {
-                console.log(data.username + " connected with ", client.id);
+    
+         client.on('infoReq', (data) => {
+             console.log(data.username + " connected with ", client.id);
 
-                if( data.username in utilisateurs) {
-                } else {
-                    client.nickname = data.username;
-                    utilisateurs[client.nickname] = client;
-                    console.log(client.nickname);
-                        
+             if( data.username in utilisateurs) {
+             } else {
+                 client.nickname = data.username;
+                 utilisateurs[client.nickname] = client;
+                // console.log(client.nickname);
+                  //   console.log(utilisateurs[data.username].id);
+             }
+            
+         });   
 
-                        console.log(utilisateurs[data.username].id);
-                }
-               
-            });   
+         // what happens is that a generic client, let's say ha1 whispers to tsu4
+         // ha1 looks for tsu4 in the array called utilisateurs ( online users) , if he finds it, he doesn't technically emits and event to him 
+         //  he makes him fire and event to himself, which means tsu4 will emit a "whisper" event to his own client and will display it 
+         client.on('send message', (data) => {
+                 var name = data.name;
+                 var msg = data.msg;    
+                     if(name in utilisateurs ) {
+                         utilisateurs[name].emit('whisper', {msg: msg, from: client.nickname});
+                     }
+             
+         });
 
-            // what happens is that a generic client, let's say ha1 whispers to tsu4
-            // ha1 looks for tsu4 in the array called utilisateurs ( online users) , if he finds it, he doesn't technically emits and event to him 
-            //  he makes him fire and event to himself, which means tsu4 will emit a "whisper" event to his own client and will display it 
-            client.on('send message', (data) => {
-                    var name = data.name;
-                    var msg = data.msg;    
-                        if(name in utilisateurs ) {
-                            utilisateurs[name].emit('whisper', {msg: msg, from: client.nickname});
-                        }
-                
-            });
-
-            client.on('disconnect', () =>  {
-                console.log(client.nickname +  " disconnected");
-                if(!client.nickname) return;
-                delete utilisateurs[client.nickname];
-               
-            });
+         client.on('disconnect', () =>  {
+             console.log(client.nickname +  " disconnected");
+             if(!client.nickname) return;
+             delete utilisateurs[client.nickname];
+            
+         });
 
 });
 
