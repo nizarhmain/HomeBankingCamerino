@@ -21,6 +21,30 @@ input::-webkit-inner-spin-button {
 
 }
 
+.pagination {
+	text-align: center;
+	
+}
+
+.pagination ul {
+	margin: 0em;
+	display: -webkit-inline-box;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	vertical-align: middle;
+}
+
+.pagination li {
+	min-width: 3em;
+	text-align: center;
+	padding: 10px;
+}
+
+.pagination .selected {
+	background: #e6e6e6; 
+}
+  
+
 .profile {
   position:  relative;
   height: auto !important;

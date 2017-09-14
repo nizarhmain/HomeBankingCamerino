@@ -78,7 +78,7 @@ class Profile extends React.Component {
 
   // we load the sockets here so we establish the socket layer in the api, live transaction and data is established at
   // this very crucial point
-  componentDidMount() {
+  componentWillMount() {
 
 	let page = this.props.match.params.page;
 	if( page == null) {
