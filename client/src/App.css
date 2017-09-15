@@ -70,8 +70,14 @@ input::-webkit-inner-spin-button {
   margin-top: 31px;
 }
 
+.moduleName {
+	margin: 10px;
+}
+
+
 .portal {
   margin-top: 60px;
+  color: white;
 }
 
 header { 

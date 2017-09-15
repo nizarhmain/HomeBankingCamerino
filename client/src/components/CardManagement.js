@@ -26,26 +26,24 @@ export class CardManagement extends React.Component {
       _id: this.props.authen.id,
       amount: 0,
       pageToLoad: 1,
-	  totalPages: 0,
-	  totalTransactions: [],
+      totalPages: 0,
+      totalTransactions: [],
       transactions: []
     };
     // binding to the actual scope that we have
     this.onChange = this.onChange.bind(this);
     this.onChangePage = this.onChangePage.bind(this);
-    this.onStampa = this.onStampa.bind(this);	
-}
+    this.onStampa = this.onStampa.bind(this);
+  }
 
   componentDidMount() {
     axios
       .get("http://localhost:3000/users/profile/" + this.state.pageToLoad)
       .then(response => {
-        this.setState(
-          {
-            transactions: response.data.transactions.docs,
-            totalPages: response.data.transactions.pages
-          }
-        );
+        this.setState({
+          transactions: response.data.transactions.docs,
+          totalPages: response.data.transactions.pages
+        });
       });
   }
 
@@ -65,60 +63,71 @@ export class CardManagement extends React.Component {
     });
   }
 
-// function that basically uses jsPdf that basically sends a request to the api and prints all the transaction of that person
-// we basically instanciate a pdfCOnvert object and feed it the data from the api
+  // function that basically uses jsPdf that basically sends a request to the api and prints all the transaction of that person
+  // we basically instanciate a pdfCOnvert object and feed it the data from the api
   onStampa() {
-	var doc = new pdfConverter("p", "pt", "a4");
-	
-	axios.get("http://localhost:3000/users/AllTransactions").then(response => {
-	
+    var doc = new pdfConverter("p", "pt", "a4");
 
-				// adding text creates a doc.addPage by default 
-			var requiredPages = Math.ceil(response.data.transactions.length / 30) - 1;
-			var from = 0;
-			var to = 40;
+    axios.get("http://localhost:3000/users/AllTransactions").then(response => {
+      // adding text creates a doc.addPage by default
+      var requiredPages = Math.ceil(response.data.transactions.length / 30) - 1;
+      var from = 0;
+      var to = 40;
 
-			doc.text(20, 50, "Data"+"                "+ "Origine"+"                "+"     Destinatario"+"      "+"   Balance" );
-			doc.setFontSize(13);
-			
-			for(var i = 1; i <= requiredPages; ++i) {
-				
-				doc.setPage(i);
-				
-				console.log( " from : "+ from +" " + " to: " +to  +  "  page : " +  i);
-				response.data.transactions.slice(from,to).map((transaction, index ) => {
+      doc.text(
+        20,
+        50,
+        "Data" +
+          "                " +
+          "Origine" +
+          "                " +
+          "     Destinatario" +
+          "      " +
+          "   Balance"
+      );
+      doc.setFontSize(13);
 
-					if (transaction.senderCard === this.props.authen.card) {
-						transaction.transactionBalance = -transaction.transactionBalance;
-					  } else {
-						transaction.transactionBalance =  "+" + transaction.transactionBalance;
-					  }
+      for (var i = 1; i <= requiredPages; ++i) {
+        doc.setPage(i);
 
-					  doc.text(20, 70 + (index*17), new Date(transaction.date).getDate() +
-					  "/" +
-					  (new Date(transaction.date).getMonth() + 1) +
-					  "/" +
-					  new Date(transaction.date).getFullYear()
-					  + "        " + transaction.senderCard + "        " + transaction.receiverCard + "        " + transaction.transactionBalance)
-		
-					});
-				
-					from = (from+41);
-					to = (to+40);
+        console.log(" from : " + from + " " + " to: " + to + "  page : " + i);
+        response.data.transactions.slice(from, to).map((transaction, index) => {
+          if (transaction.senderCard === this.props.authen.card) {
+            transaction.transactionBalance = -transaction.transactionBalance;
+          } else {
+            transaction.transactionBalance =
+              "+" + transaction.transactionBalance;
+          }
 
-			  if(requiredPages ===  i){
-				  console.log("this is the last iteration");
-			  } else {
-				doc.addPage();				
-			  }
+          doc.text(
+            20,
+            70 + index * 17,
+            new Date(transaction.date).getDate() +
+              "/" +
+              (new Date(transaction.date).getMonth() + 1) +
+              "/" +
+              new Date(transaction.date).getFullYear() +
+              "        " +
+              transaction.senderCard +
+              "        " +
+              transaction.receiverCard +
+              "        " +
+              transaction.transactionBalance
+          );
+        });
 
-			}
-			
-			doc.save("Lista dei Movimenti.pdf");
-		});
-		
-	
-	
+        from = from + 41;
+        to = to + 40;
+
+        if (requiredPages === i) {
+          console.log("this is the last iteration");
+        } else {
+          doc.addPage();
+        }
+      }
+
+      doc.save("Lista dei Movimenti.pdf");
+    });
   }
 
   render() {
@@ -126,7 +135,7 @@ export class CardManagement extends React.Component {
       if (transaction.senderCard === this.props.authen.card) {
         transaction.transactionBalance = -transaction.transactionBalance;
       } else {
-        transaction.transactionBalance =  "+" + transaction.transactionBalance;
+        transaction.transactionBalance = "+" + transaction.transactionBalance;
       }
     });
 
@@ -181,15 +190,14 @@ export class CardManagement extends React.Component {
               </tfoot>
             </table>
           </div>
-		  <div className="six wide column cardActions"> 
-		  		<RaisedButton
-                    label="Stampa Tutti I Movimenti "
-                    primary={true}
-                    onTouchTap={this.onStampa}
-                  />
-		  </div>
-        </div>
-			
+			<div className="six wide column">
+				<RaisedButton
+				label="Stampa Tutti I Movimenti "
+				primary={true}
+				onTouchTap={this.onStampa}
+				/>
+			</div>
+          </div>
       </div>
     );
   }

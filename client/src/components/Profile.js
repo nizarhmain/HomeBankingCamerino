@@ -7,6 +7,8 @@ import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import axios from "axios";
 
+import {Bar, Line, Pie } from 'react-chartjs-2';
+
 import openSocket from "socket.io-client";
 
 const socket = openSocket("http://localhost:5000/chat_infra");
@@ -22,7 +24,10 @@ class Profile extends React.Component {
       month: date.getMonth() + 1,
       cardNumber: "",
       amount: 0,
-      balance: ""
+	  balance: "",
+	  transactions: [],
+	  chartData : {
+	  }
     };
     this.onCardClick = this.onCardClick.bind(this);
     this.cc_format = this.cc_format.bind(this);
@@ -37,6 +42,8 @@ class Profile extends React.Component {
 
   // socket part is here
 
+
+  
   personalInfo(cb) {
     // we listen for the info to come, if we don't receive or get an err, we got null, else we got an info and we use that info
     socket.on("infoRes", info => cb(null, info));
@@ -86,10 +93,49 @@ class Profile extends React.Component {
 	}
 
     axios.get("http://localhost:3000/users/profile/1").then(response => {
-      console.log(response.data.user.balance);
-      console.log(response.data.transactions);
-      this.setState({ balance: response.data.user.balance });
-    });
+      console.log("your balance is : " + response.data.user.balance);
+	  this.setState({ balance: response.data.user.balance});
+
+		// we only need the dates and the balances 
+		var transactionDates = response.data.transactions.docs.slice(0,12).map((transaction) => {
+			var date = new Date(transaction.date).getDate() +
+			"/" +
+			(new Date(transaction.date).getMonth() + 1) +
+			"/" +
+			new Date(transaction.date).getFullYear()
+			return date
+		});
+
+
+		var transactionsBalances =  response.data.transactions.docs.slice(0,12).map((transaction) => {
+			
+			if (transaction.senderCard === this.props.authen.card) {
+		  transaction.transactionBalance = -transaction.transactionBalance;
+		} else {
+		  transaction.transactionBalance = transaction.transactionBalance;
+		}
+
+			return transaction.transactionBalance
+		});
+
+		console.log(transactionsBalances);
+
+				this.setState({ 
+						chartData: {
+							labels: transactionDates,
+							datasets: [{
+								label: 'Ultime 12 transazioni',
+								data: 
+									transactionsBalances
+								,
+								backgroundColor: 'lightblue',
+							   
+							}],
+						}
+
+				 }
+				);	  
+	});
 
     // we get the personal info for the socket, without we wouldn't identiy the client
     // that sends the requested socket
@@ -132,6 +178,18 @@ class Profile extends React.Component {
   }
 
   render() {
+
+	Chart.defaults.global.defaultFontColor = '#fff';
+
+	// we alter the transaction by giving the right sign, either a + or a -
+	this.state.transactions.map(transaction => {
+		if (transaction.senderCard === this.props.authen.card) {
+		  transaction.transactionBalance = -transaction.transactionBalance;
+		} else {
+		  transaction.transactionBalance = "+" + transaction.transactionBalance;
+		}
+	  });
+
     return (
       <div className="profile">
         <div className="ui grid stackable">
@@ -220,13 +278,23 @@ class Profile extends React.Component {
                   />
                   <br />
                   <RaisedButton
-                    label="Transfer !"
+                    label="trasferire !"
                     primary={true}
                     onTouchTap={this.onTransfer}
                   />
                 </List>
               }
             />
+          </div>
+		  <div className="ten wide column chart">
+					<Line
+						data={this.state.chartData}
+				options={{
+						
+					maintainAspectRatio: true
+						
+						}}
+					/>
           </div>
         </div>
       </div>

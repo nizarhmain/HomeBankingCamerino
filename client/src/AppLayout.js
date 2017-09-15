@@ -5,7 +5,6 @@ import NavBar from './components/NavBar'
 import Portal from './components/Portal'
 import Profile from './components/Profile'
 import CardManagement from './components/CardManagement'
-import Julia from './components/Julia'
 
 import requireAuth from './utils/requireAuth'
 
@@ -30,7 +29,6 @@ export default class AppLayout extends React.Component {
 										<Route exact path="/" component={Portal} />
 										<Route exact path="/profile" component={requireAuth(Profile)} />   
 										<Route exact path="/cardmanagement" component={requireAuth(CardManagement)} />   										  
-										<Route exact path="/babe" component={Julia} />   										  
 		  				 </Switch>
                         
                         </main>
