@@ -73,15 +73,13 @@ export class NavBar extends React.Component {
                 <a href="#0">Assistenza</a>
               </li>
               <li>
-			  {!this.props.authen.isAuthenticated ? (
-                  <a>
-                   
-                  </a>
-              ) : (
-                <li>
-				<a href="/profile">Profile</a>
-                </li>
-              )}
+                {!this.props.authen.isAuthenticated ? (
+                  <a />
+                ) : (
+                  <li>
+                    <a href="/profile">Profile</a>
+                  </li>
+                )}
               </li>
               <li>
                 <a href="#0" className="cd-subnav-trigger">

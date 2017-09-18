@@ -5,8 +5,6 @@ const ReactDOM = require("react-dom");
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-import { persistStore, autoRehydrate } from "redux-persist";
-
 import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "./rootReducer";
 import setAuthorizationToken from "./utils/setAuthorizationToken";
@@ -19,6 +17,10 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 injectTapEventPlugin();
 
 //creating the redux store here
+// we basically create a store that contains all of our states, and
+// add to it the thunk middleware that is for used for asynchronous calls, 
+// basically using .then()
+// after returning a promise, we can then chain another promise, all of it in an asynchronous maner 
 const store = createStore(
   rootReducer,
   compose(
@@ -27,8 +29,6 @@ const store = createStore(
   )
 );
 
-// redux-persist
-//persistStore(store)
 
 // keep the jwt token saved in the localstorage
 if (localStorage.jwtToken) {
@@ -38,6 +38,10 @@ if (localStorage.jwtToken) {
   store.dispatch(setCurrentUser(userInfo._doc));
 }
 
+// we initalize our Main component 
+// we enclose in an MuiThemProvider that basically gives us all the elements of Material UI
+// the AppLayout is component that is part of the App
+// the layout contains all the other elements of the app
 class App extends Component {
   render() {
     const a = 5;
@@ -49,6 +53,8 @@ class App extends Component {
   }
 }
 
+// Here react proceeds to render The App in the dom and is enclosed in another Provider, the Redux,
+// redux is now binded to react at this point
 ReactDOM.render(
   // redux provider store
   <Provider store={store}>

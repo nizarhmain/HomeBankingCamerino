@@ -10,13 +10,17 @@ import requireAuth from './utils/requireAuth'
 
 import './App.css'
 
+// The Navbar contains the LoginDialog and the SignUp component
+// this component returns other components
+// if anything changes in one of the children, it will re-render the whole thing 
 
+// requireAuth is a function, kinda middleware-like that takes a component
+// and checks some boolean values
+// keep in mind that this is only client side validation
+// if someone knows about the existance of Postman you'de be doomed
 
 export default class AppLayout extends React.Component {
 
-  constructor(props) {
-	super(props);
-  }
 
   render() {
 	return (

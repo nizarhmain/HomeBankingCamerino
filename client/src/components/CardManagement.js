@@ -8,12 +8,6 @@ import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Paginator from "react-paginate";
 
-import { setCurrentBalance } from "../actions/financeActions";
-import { changeBalance } from "../actions/financeActions";
-
-import { setCurrentUser } from "../actions/login";
-import { newCurrentBalance } from "../actions/login";
-
 // pdf generator
 import pdfConverter from "jspdf";
 
@@ -190,14 +184,14 @@ export class CardManagement extends React.Component {
               </tfoot>
             </table>
           </div>
-			<div className="six wide column">
-				<RaisedButton
-				label="Stampa Tutti I Movimenti "
-				primary={true}
-				onTouchTap={this.onStampa}
-				/>
-			</div>
+          <div className="six wide column">
+            <RaisedButton
+              label="Stampa Tutti I Movimenti "
+              primary={true}
+              onTouchTap={this.onStampa}
+            />
           </div>
+        </div>
       </div>
     );
   }

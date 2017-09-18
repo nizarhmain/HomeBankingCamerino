@@ -116,30 +116,34 @@ router.get(
   "/profile/:page",
   passport.authenticate("jwt", { session: false }),
   function(req, res) {
-	var userCard = req.user.creditCard;
-	var page = req.params.page;
-	Transaction.paginate( 
-		Transaction.find({
-			$or: [{ senderCard: userCard }, { receiverCard: userCard }]
-		  }).sort('-date'), {page: page, limit: 20}, (err, transactions) => {	
-			 return res.json({ user: req.user, transactions: transactions});
-		 }
-	)
-		}
-	);
+    var userCard = req.user.creditCard;
+    var page = req.params.page;
+    Transaction.paginate(
+      Transaction.find({
+        $or: [{ senderCard: userCard }, { receiverCard: userCard }]
+      }).sort("-date"),
+      { page: page, limit: 20 },
+      (err, transactions) => {
+        return res.json({ user: req.user, transactions: transactions });
+      }
+    );
+  }
+);
 
-
-	router.get("/AllTransactions", passport.authenticate("jwt", {session: false}), (req, res ) => {
-		var userCard = req.user.creditCard;
-		Transaction.getTransactionsOfCard(userCard, (err, transactions) => {
-			if (err) {
-			  console.log("couldn't fetch the transactions ");
-			} else {
-			  return res.json({transactions: transactions });
-			}		
-		  });
-	});
-
+router.get(
+  "/AllTransactions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    var userCard = req.user.creditCard;
+    Transaction.getTransactionsOfCard(userCard, (err, transactions) => {
+      if (err) {
+        console.log("couldn't fetch the transactions ");
+      } else {
+        return res.json({ transactions: transactions });
+      }
+    });
+  }
+);
 
 router.put("/transfer", function(req, res) {
   // sender and receiver are card numbers
