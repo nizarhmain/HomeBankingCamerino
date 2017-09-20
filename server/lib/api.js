@@ -48,6 +48,16 @@ require("./config/passport")(passport);
 
 app.use("/users", users); // route handle for the users
 
+// index route
+app.get('/', function(req, res){
+	res.sendFile(path.join(__dirname, 'public/index.html'));
+ });
+ 
+ app.get('*', function(req, res){
+	 res.sendFile(path.join(__dirname, 'public/index.html'));
+ });
+ 
+
 //start server
 var server = app.listen(port, () => {
   console.log("server started on port : " + port);

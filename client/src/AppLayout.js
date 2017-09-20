@@ -21,6 +21,9 @@ import './App.css'
 
 export default class AppLayout extends React.Component {
 
+constructor(props) {
+	super(props);
+ }
 
   render() {
 	return (

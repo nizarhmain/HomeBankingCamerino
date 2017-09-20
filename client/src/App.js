@@ -60,7 +60,7 @@ ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById("App")
+  document.getElementById('app')
 );
 
 export default App;

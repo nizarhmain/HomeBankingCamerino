@@ -5,8 +5,8 @@
   "main": "lib/api.js",
   "scripts": {
     "start": "nodemon lib/api.js --exec babel-node --presets es2015,stage-2",
-    "build": "babel lib -d dist",
-    "serve": "node dist/api.js",
+    "build": "babel lib -d serverDist",
+    "serve": "node serverDist/api.js",
     "test": "mocha --compilers js:babel-register"
   },
   "dependencies": {
