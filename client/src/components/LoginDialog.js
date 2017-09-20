@@ -122,7 +122,7 @@ export class LoginDialog extends React.Component {
           onRequestClose={this.handleClose}
         >
           <TextField
-            hintText="Brugernavn"
+            hintText="User Name"
             fullWidth={true}
             name="username"
             value={this.state.username}
@@ -132,7 +132,7 @@ export class LoginDialog extends React.Component {
           <br />
           <br />
           <TextField
-            hintText="Adgangskoden"
+            hintText="Password"
             fullWidth={true}
             name="password"
             value={this.state.password}

@@ -76,9 +76,9 @@ export class NavBar extends React.Component {
                 {!this.props.authen.isAuthenticated ? (
                   <a />
                 ) : (
-                  <li>
+                  
                     <a href="/profile">Profile</a>
-                  </li>
+                  
                 )}
               </li>
               <li>

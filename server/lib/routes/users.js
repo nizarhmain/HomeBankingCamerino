@@ -118,7 +118,10 @@ router.get(
   function(req, res) {
     var userCard = req.user.creditCard;
     var page = req.params.page;
-    Transaction.paginate(
+		if(req.user == null) {
+			return res.sendStatus(403);
+		}
+	Transaction.paginate(
       Transaction.find({
         $or: [{ senderCard: userCard }, { receiverCard: userCard }]
       }).sort("-date"),
@@ -134,10 +137,14 @@ router.get(
   "/AllTransactions",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    var userCard = req.user.creditCard;
+	var userCard = req.user.creditCard;
+		if(userCard === null) {
+			return res.sendStatus(403);
+		}
     Transaction.getTransactionsOfCard(userCard, (err, transactions) => {
       if (err) {
-        console.log("couldn't fetch the transactions ");
+		console.log("couldn't fetch the transactions ");
+		return res.sendStatus(404);
       } else {
         return res.json({ transactions: transactions });
       }
@@ -145,30 +152,38 @@ router.get(
   }
 );
 
-router.put("/transfer", function(req, res) {
+router.put("/transfer",
+passport.authenticate("jwt", { session: false }),
+function(req, res) {
   // sender and receiver are card numbers
   var sender = req.body.sender;
   var receiver = req.body.receiver;
   var amount = req.body.amount;
 
+  if(req.body == null || req.body.sender == 0 || req.body.receiver == 0 || req.body.amount <= 0 
+	|| req.body.sender == undefined || req.body.receiver == undefined || req.body.amount == undefined 
+    || req.body.sender == null || req.body.receiver == null || req.body.amount == null ) {
+	return res.sendStatus(403);
+}
+
   User.getUserByCard(sender, (err, sender) => {
     if (err) {
-      return res.sendStatus(400);
+       res.sendStatus(404);
     }
     if (!sender) {
-      return res.json({ errors: { username: "user not found" } });
+       res.sendStatus(404);
     }
 
     // check if the sender is in the range of 0 or more and that the transaction is less than his actual balance
     // we got a valid sender at  this point
-    if (sender.balance >= 0 && sender.balance >= amount) {
+    if (sender.balance > 0 && sender.balance >= amount ) {
       User.getUserByCard(receiver, (err, receiver) => {
         if (err) {
-          return res.sendStatus(400);
+    		return res.sendStatus(404);
         }
         if (!receiver) {
-          return res.json({ errors: { username: "user not found" } });
-        }
+			return res.sendStatus(404);			
+		}
 
         // we found both the sender and the receiver info are here
         // we have sender + receiver + amount here
@@ -180,7 +195,8 @@ router.put("/transfer", function(req, res) {
 
         Transaction.AddTransaction(newTransaction, function(err, transaction) {
           if (err) {
-            console.log("transaction was not registered, something went buggy");
+			console.log("transaction was not registered, something went buggy");
+			return res.sendStatus(500);
           } else {
             console.log(
               "transaction was successfully registered on the database"
@@ -196,8 +212,7 @@ router.put("/transfer", function(req, res) {
           { $set: { balance: newSenderBalance } },
           function(err, nbRows, raw) {
             if (err) {
-              console.log("go die");
-              return res.sendStatus(400);
+              return res.sendStatus(500);
             } else {
               console.log("the sender lost his money");
             }
@@ -209,8 +224,7 @@ router.put("/transfer", function(req, res) {
           { $set: { balance: newReceiverBalance } },
           function(err, nbRows, raw) {
             if (err) {
-              console.log("go die twice");
-              return res.sendStatus(400);
+              return res.sendStatus(500);
             } else {
               console.log("transaction was successfull");
             }
@@ -218,51 +232,13 @@ router.put("/transfer", function(req, res) {
         );
 
         return res.json({
-          transaction: { newBalanceSender: newSenderBalance }
+          transaction: { newBalanceSender: newSenderBalance, msg: "The transfer was successfull !" }
         });
       });
     } else {
       return res.json({ msg: "not enough funds to do this transaction :( " });
     }
   });
-});
-
-router.put("/updatebalance", function(req, res) {
-  var user = req.body;
-  var amount = req.body.amount;
-  if (user == null || user._id == null) {
-    return res.sendStatus(400);
-  } else {
-    User.getUserById(user._id, (err, user) => {
-      if (err) {
-        return res.sendStatus(400);
-      }
-      var newBalance = user.balance + amount;
-      User.update(
-        { _id: user._id },
-        { $set: { balance: newBalance } },
-        function(err, nbRows, raw) {
-          if (err) {
-            console.log("couldnt find it ");
-            return res.sendStatus(400);
-          } else {
-            return res.json({
-              success: true,
-              msg: "Transaction completed",
-              user: {
-                _id: user._id,
-                name: user.name,
-                username: user.username,
-                email: user.email,
-                creditCard: user.creditCard,
-                balance: newBalance
-              }
-            });
-          }
-        }
-      );
-    });
-  }
 });
 
 module.exports = router;

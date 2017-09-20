@@ -207,6 +207,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { changeBalance, setCurrentUser })(
+export default connect(mapStateToProps )(
   CardManagement
 );

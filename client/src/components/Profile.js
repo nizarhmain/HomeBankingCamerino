@@ -34,59 +34,9 @@ class Profile extends React.Component {
     this.onTransfer = this.onTransfer.bind(this);
   }
 
-  // these are sockets for real time data transfer
-  privateMessage(cb) {
-    socket.on("whisper", data => cb(null, data));
-  }
-
-  // socket part is here
-
-  personalInfo(cb) {
-    // we listen for the info to come, if we don't receive or get an err, we got null, else we got an info and we use that info
-    socket.on("infoRes", info => cb(null, info));
-    socket.emit("infoReq", {
-      id: this.props.authen.id,
-      creditCard: this.props.authen.card
-    });
-  }
-
-  // TODO this is just a todo
-
-  onTransfer() {
-    axios
-      .put("http://localhost:3000/users/transfer", {
-        sender: this.props.authen.card,
-        receiver: this.state.cardNumber,
-        amount: this.state.amount
-      })
-      .then(response => {
-        console.log("you Successfully transfered money !");
-        // if we have a successfully entry in the db, and the successfull manage to happen
-        // we let know about the transfer to the receiver
-        // if the client received the message emit
-        // we 'll make him do another axios request to update his balance
-
-        socket.emit("send message", {
-          name: this.state.cardNumber, // to who are you sending the moneyz
-          msg: "You just received some money, congrats !"
-        });
-
-        // update the sender's balance too here
-        // second axios request to update the balance after a notification from another user
-        axios.get("http://localhost:3000/users/profile/1").then(response => {
-          console.log(response.data.user.balance);
-          this.setState({ balance: response.data.user.balance });
-        });
-      });
-  }
-
-  // we load the sockets here so we establish the socket layer in the api, live transaction and data is established at
+   // we load the sockets here so we establish the socket layer in the api, live transaction and data is established at
   // this very crucial point
-  componentWillMount() {
-    let page = this.props.match.params.page;
-    if (page == null) {
-      page = 1;
-    }
+  componentDidMount() {
 
     axios.get("http://localhost:3000/users/profile/1").then(response => {
       console.log("your balance is : " + response.data.user.balance);
@@ -133,19 +83,70 @@ class Profile extends React.Component {
       });
     });
 
-    // we get the personal info for the socket, without we wouldn't identiy the client
+
+	// we get the personal info for the socket, without we wouldn't identiy the client
     // that sends the requested socket
     this.personalInfo();
+	
+		this.privateMessage((err, data) => {
+		  console.log(data);
+		  // second axios request to update the balance after a notification from another user
+		  axios.get("http://localhost:3000/users/profile/1").then(response => {
+			//console.log(response.data.user.balance);
+		   this.setState({ balance: response.data.user.balance });
+	
+			});
+		});
+    
+  }
 
-    this.privateMessage((err, data) => {
-      console.log(data);
-      // second axios request to update the balance after a notification from another user
-      axios.get("http://localhost:3000/users/profile/1").then(response => {
-        console.log(response.data.user.balance);
-        this.setState({ balance: response.data.user.balance });
-      });
+  // these are sockets for real time data transfer
+  privateMessage(cb) {
+    socket.on("whisper", data => cb(null, data));
+  }
+
+  // socket part is here
+
+  personalInfo(cb) {
+    // we listen for the info to come, if we don't receive or get an err, we got null, else we got an info and we use that info
+    socket.on("infoRes", info => cb(null, info));
+    socket.emit("infoReq", {
+      id: this.props.authen.id,
+      creditCard: this.props.authen.card
     });
   }
+
+  // TODO this is just a todo
+
+  onTransfer() {
+    axios
+      .put("http://localhost:3000/users/transfer", {
+        sender: this.props.authen.card,
+        receiver: this.state.cardNumber,
+        amount: this.state.amount
+      })
+      .then(response => {
+		  console.log(response);
+        // if we have a successfully entry in the db, and the successfull manage to happen
+        // we let know about the transfer to the receiver
+        // if the client received the message emit
+        // we 'll make him do another axios request to update his balance
+
+        socket.emit("send message", {
+          name: this.state.cardNumber, // to who are you sending the moneyz
+          msg: "You just received some money, congrats !"
+        });
+
+        // update the sender's balance too here
+        // second axios request to update the balance after a notification from another user
+        axios.get("http://localhost:3000/users/profile/1").then(response => {
+          console.log(response.data.user.balance);
+          this.setState({ balance: response.data.user.balance });
+        });
+      });
+  }
+
+ 
 
   onCardClick(e) {
     e.preventDefault();

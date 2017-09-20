@@ -121,16 +121,16 @@ class SignUp extends React.Component {
 
     return (
       <div>
-        <RaisedButton label="Opret !" onTouchTap={this.handleOpen} />
+        <RaisedButton label="Sign Up !" onTouchTap={this.handleOpen} />
         <Dialog
-          title="Opret din konto "
+          title="Signing up"
           actions={actions}
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
           <TextField
-            hintText="Dit fulde navn"
+            hintText="Your full name"
             fullWidth={true}
             name="name"
             value={this.state.name}
@@ -140,7 +140,7 @@ class SignUp extends React.Component {
           <br />
 
           <TextField
-            hintText="Vælg et Brugernavn"
+            hintText="Choose a username"
             fullWidth={true}
             name="username"
             value={this.state.username}
@@ -158,7 +158,7 @@ class SignUp extends React.Component {
           />
           <br />
           <TextField
-            hintText="Indtast adgangskode"
+            hintText="Choose a password"
             fullWidth={true}
             type="password"
             name="password"
@@ -167,7 +167,7 @@ class SignUp extends React.Component {
             errorText={errors.password}
           />
           <TextField
-            hintText="Gentag adgangskode"
+            hintText="Reconfirm your password"
             fullWidth={true}
             type="password"
             name="passwordConfirmation"
