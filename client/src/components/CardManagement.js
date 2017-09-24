@@ -13,6 +13,14 @@ import pdfConverter from "jspdf";
 
 /* TODO this and that */
 
+const nodeEnv = process.env.NODE_ENV;
+if (nodeEnv === 'production') {
+    var link = "https://homebanking.camerino.herokuapp.com"
+} else if (nodeEnv === 'development') {
+    var link = "http://localhost:3000"
+}
+
+
 export class CardManagement extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +40,7 @@ export class CardManagement extends React.Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:3000/users/profile/" + this.state.pageToLoad)
+      .get( link + "/users/profile/" + this.state.pageToLoad)
       .then(response => {
         this.setState({
           transactions: response.data.transactions.docs,
@@ -49,7 +57,7 @@ export class CardManagement extends React.Component {
     console.log(page.selected);
     this.setState({ pageToLoad: page.selected + 1 }, () => {
       axios
-        .get("http://localhost:3000/users/profile/" + this.state.pageToLoad)
+          .get(link + "/users/profile/" + this.state.pageToLoad)
         .then(response => {
           console.log(response.data.transactions);
           this.setState({ transactions: response.data.transactions.docs });
@@ -62,9 +70,10 @@ export class CardManagement extends React.Component {
   onStampa() {
     var doc = new pdfConverter("p", "pt", "a4");
 
-    axios.get("http://localhost:3000/users/AllTransactions").then(response => {
-      // adding text creates a doc.addPage by default
-      var requiredPages = Math.ceil(response.data.transactions.length / 30) - 1;
+    axios.get(link + "/users/AllTransactions").then(response => {
+	  // adding text creates a doc.addPage by default
+	  var requiredPages = Math.ceil(response.data.transactions.length / 30);
+	  console.log(requiredPages);	  
       var from = 0;
       var to = 40;
 

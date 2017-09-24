@@ -9,13 +9,31 @@ import generator from "./finance/CreditCardGenerator";
 import socket from "socket.io";
 import User from "./models/user";
 
-//connect to database
-mongoose.Promise = require("bluebird");
-mongoose.connect(config.database);
 
-mongoose.connection.on("connected", () => {
-  console.log("connected to the database" + config.database);
-});
+
+//connect to database
+
+
+
+mongoose.Promise = require("bluebird");
+
+
+if (process.env.NODE_ENV === "production") {
+    console.log("this is prod");
+    connect_db(config.prod_database);
+} else {
+    console.log("this is dev");
+    connect_db(config.dev_database);
+}
+
+// function that determines if we going prod or dev
+function connect_db(database) {
+    mongoose.connect(database);
+
+    mongoose.connection.on("connected", () => {
+        console.log("connected to the database" + database);
+    });
+}
 
 //on error connection
 mongoose.connection.on("error", err => {
@@ -24,7 +42,8 @@ mongoose.connection.on("error", err => {
 
 // initialize our app variable with express
 const app = express();
-const port = 3000;
+// keep this one for heroku
+const port = process.env.PORT || 3000;
 
 import users from "./routes/users";
 
@@ -63,10 +82,13 @@ var server = app.listen(port, () => {
   console.log("server started on port : " + port);
 });
 
+
+
 // Socket setup
 var serverSocket = socket(server);
-serverSocket.listen(5000);
-console.log("websockets listening on port :", 5000);
+
+//serverSocket.listen(5000); worked without in heroku anyways
+//console.log("websockets listening on port :", 5000);
 
 var utilisateurs = {};
 

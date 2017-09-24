@@ -13,6 +13,14 @@ import { addFlashMessage, deleteFlashMessage } from "../actions/flashMessages";
 import PropTypes from "prop-types"; // react prop types are depecrated
 import { connect } from "react-redux";
 
+const nodeEnv = process.env.NODE_ENV;
+if (nodeEnv === 'production') {
+    var link = "https://homebanking.camerino.herokuapp.com"
+} else if (nodeEnv === 'development') {
+    var link = "http://localhost:3000"
+}
+
+
 class SignUp extends React.Component {
   constructor(props) {
     super(props);

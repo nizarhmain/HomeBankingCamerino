@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../actions/login";
 
+
 export class NavBar extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +34,7 @@ export class NavBar extends React.Component {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
-          href="http://fonts.googleapis.com/css?family=PT+Sans:400,700"
+          href="https://fonts.googleapis.com/css?family=PT+Sans:400,700"
           rel="stylesheet"
           type="text/css"
         />

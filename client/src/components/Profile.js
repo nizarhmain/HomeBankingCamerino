@@ -11,10 +11,19 @@ import { Bar, Line, Pie } from "react-chartjs-2";
 
 import openSocket from "socket.io-client";
 
-const socket = openSocket("http://localhost:5000/chat_infra");
+
+const nodeEnv = process.env.NODE_ENV;
+if (nodeEnv === 'production') {
+    var link = "https://homebanking.camerino.herokuapp.com"
+} else if (nodeEnv === 'development') {
+    var link = "http://localhost:3000"
+}
+
+const socket = openSocket(link + "/chat_infra");
 
 class Profile extends React.Component {
   // changed the promise auth header is sent automatically so when the shit is completed i'll just have to extract the user from it
+
 
   constructor(props) {
     var date = new Date();
@@ -37,8 +46,8 @@ class Profile extends React.Component {
    // we load the sockets here so we establish the socket layer in the api, live transaction and data is established at
   // this very crucial point
   componentDidMount() {
-
-    axios.get("http://localhost:3000/users/profile/1").then(response => {
+      console.log(nodeEnv);
+    axios.get( link + "/users/profile/1").then(response => {
       console.log("your balance is : " + response.data.user.balance);
       this.setState({ balance: response.data.user.balance });
 
@@ -91,7 +100,7 @@ class Profile extends React.Component {
 		this.privateMessage((err, data) => {
 		  console.log(data);
 		  // second axios request to update the balance after a notification from another user
-		  axios.get("http://localhost:3000/users/profile/1").then(response => {
+          axios.get(link + "/users/profile/1").then(response => {
 			//console.log(response.data.user.balance);
 		   this.setState({ balance: response.data.user.balance });
 	
@@ -120,7 +129,7 @@ class Profile extends React.Component {
 
   onTransfer() {
     axios
-      .put("http://localhost:3000/users/transfer", {
+        .put(link + "/users/transfer", {
         sender: this.props.authen.card,
         receiver: this.state.cardNumber,
         amount: this.state.amount
@@ -139,7 +148,7 @@ class Profile extends React.Component {
 
         // update the sender's balance too here
         // second axios request to update the balance after a notification from another user
-        axios.get("http://localhost:3000/users/profile/1").then(response => {
+        axios.get(link + "/users/profile/1").then(response => {
           console.log(response.data.user.balance);
           this.setState({ balance: response.data.user.balance });
         });
@@ -222,7 +231,7 @@ class Profile extends React.Component {
                   <ListItem primaryText="Lista dei Movimenti" disabled={true} />
                   <div className="ui grid stackable container">
                     <div className="six wide column">
-                      <img src="http://paymenticons.com/img/mastercard.png" />
+                      <img src="https://www.techgoondu.com/wp-content/uploads/2015/03/MasterCard.png" height="70px" />
                     </div>
                     <div className="ten wide column">
                       <ListItem

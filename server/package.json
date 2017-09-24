@@ -5,9 +5,10 @@
   "main": "lib/api.js",
   "scripts": {
     "start": "nodemon lib/api.js --exec babel-node --presets es2015,stage-2",
-    "build": "babel lib -d serverDist",
-    "serve": "node serverDist/api.js",
-    "test": "mocha --compilers js:babel-register"
+    "build": "babel lib -d ../../../HomeBankingDeplo/serverDist",
+    "serve": "node ../../../HomeBankingDeplo/serverDist/api.js",
+    "dev": "set NODE_ENV=development&& nodemon lib/api.js --exec babel-node --presets es2015",
+    "prod": "set NODE_ENV=production&& babel lib -d ../../../HomeBankingDeplo/serverDist"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",

@@ -61,7 +61,7 @@ _mongoose2.default.connection.on("error", function (err) {
 
 // initialize our app variable with express
 var app = (0, _express2.default)();
-var port = 3000;
+var port = process.env.PORT || 3000;
 
 //cors middleware
 app.use((0, _cors2.default)());

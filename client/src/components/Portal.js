@@ -55,9 +55,8 @@ class Portal extends Component {
                   <h1> Socket.io </h1>
                 </div>
                 <img
-                  src="http://devstickers.com/assets/img/pro/rd5f.png"
-                  height="130px"
-                  alt="Logo"
+                  src="https://www.pubnub.com/wp-content/uploads/2014/07/SOCKETIOICON.gif"
+				  height="130px"
                 />
               </div>
               <div className="moduleName">
@@ -65,9 +64,9 @@ class Portal extends Component {
                   <h1> MongoDb </h1>
                 </div>
                 <img
-                  src="http://www.theodo.fr/uploads/blog//2015/11/mongodb.png"
-                  height="150px"
-                  alt="Logo"
+                  src="https://webassets.mongodb.com/_com_assets/cms/MongoDB-Logo-5c3a7405a85675366beb3a5ec4c032348c390b3f142f5e6dddf1d78e2df5cb5c.png"
+				  width="300px"
+				  alt="150px"
                 />
               </div>
               <div className="moduleName">
@@ -90,9 +89,7 @@ class Portal extends Component {
                   </h1>
                 </div>
                 <img
-                  src="http://elearning.unicam.it/pluginfile.php/1/theme_bcu/logo/1490695056/Logo%20Unicam3.png"
-                  height="146px"
-                  alt="Logo"
+                 
                 />
               </div>
             </div>
