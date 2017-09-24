@@ -11,13 +11,10 @@ import { Bar, Line, Pie } from "react-chartjs-2";
 
 import openSocket from "socket.io-client";
 
+import { linkLogic } from "../utils/linkLogic";
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'production') {
-    var link = "https://homebanking.camerino.herokuapp.com"
-} else if (nodeEnv === 'development') {
-    var link = "http://localhost:3000"
-}
+var link = linkLogic();
+
 
 const socket = openSocket(link + "/chat_infra");
 
@@ -46,7 +43,6 @@ class Profile extends React.Component {
    // we load the sockets here so we establish the socket layer in the api, live transaction and data is established at
   // this very crucial point
   componentDidMount() {
-      console.log(nodeEnv);
     axios.get( link + "/users/profile/1").then(response => {
       console.log("your balance is : " + response.data.user.balance);
       this.setState({ balance: response.data.user.balance });

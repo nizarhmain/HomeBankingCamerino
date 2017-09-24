@@ -78,7 +78,7 @@ export class LoginDialog extends React.Component {
           }
         },
         err => {
-          console.log("shouldnt happen");
+          console.log(err);
         }
       );
     }

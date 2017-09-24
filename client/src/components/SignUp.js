@@ -12,13 +12,9 @@ import { addFlashMessage, deleteFlashMessage } from "../actions/flashMessages";
 
 import PropTypes from "prop-types"; // react prop types are depecrated
 import { connect } from "react-redux";
+import { linkLogic } from "../utils/linkLogic";
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'production') {
-    var link = "https://homebanking.camerino.herokuapp.com"
-} else if (nodeEnv === 'development') {
-    var link = "http://localhost:3000"
-}
+var link = linkLogic();
 
 
 class SignUp extends React.Component {

@@ -7,18 +7,15 @@ import { List, ListItem } from "material-ui/List";
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Paginator from "react-paginate";
-
+import { linkLogic } from "../utils/linkLogic";
 // pdf generator
 import pdfConverter from "jspdf";
 
 /* TODO this and that */
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'production') {
-    var link = "https://homebanking.camerino.herokuapp.com"
-} else if (nodeEnv === 'development') {
-    var link = "http://localhost:3000"
-}
+
+
+var link = linkLogic();
 
 
 export class CardManagement extends React.Component {

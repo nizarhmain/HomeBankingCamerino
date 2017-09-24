@@ -1,13 +1,9 @@
 import axios from "axios";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
+import { linkLogic } from "../utils/linkLogic";
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'production') {
-    var link = "https://homebanking.camerino.herokuapp.com"
-} else if (nodeEnv === 'development') {
-    var link = "http://localhost:3000"
-}
-
+// one function call that should do the job instead of everything to check if we in prod or dev
+var link = linkLogic();
 
 export function setCurrentUser(user) {
   return {

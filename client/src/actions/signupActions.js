@@ -1,11 +1,8 @@
 import axios from "axios";
+import { linkLogic } from "../utils/linkLogic";
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'production') {
-    var link = "https://homebanking.camerino.herokuapp.com"
-} else if (nodeEnv === 'development') {
-    var link = "http://localhost:3000"
-}
+var link = linkLogic();
+
 
 export function userSignupRequest(userData) {
   return dispatch => {
