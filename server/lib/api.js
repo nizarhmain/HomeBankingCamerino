@@ -8,7 +8,8 @@ import config from "./config/database";
 import generator from "./finance/CreditCardGenerator";
 import socket from "socket.io";
 import User from "./models/user";
-
+import sslRedirect from 'heroku-ssl-redirect';
+import users from "./routes/users";
 
 
 //connect to database
@@ -45,11 +46,10 @@ const app = express();
 // keep this one for heroku
 const port = process.env.PORT || 3000;
 
-import users from "./routes/users";
 
 //cors middleware
 app.use(cors());
-
+app.use(sslRedirect());
 //set static folder for the front end at the end of the distribution
 // we'll need it later for deployment
 
@@ -58,6 +58,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //router
 //body parser middleware
 app.use(bodyParser.json());
+
 
 //passport middleware
 app.use(passport.initialize());
@@ -68,6 +69,10 @@ require("./config/passport")(passport);
 app.use("/users", users); // route handle for the users
 
 // index route
+
+// enable ssl redirect
+
+
 app.get('/', function(req, res){
 	res.sendFile(path.join(__dirname, 'public/index.html'));
  });
